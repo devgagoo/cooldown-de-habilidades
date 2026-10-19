@@ -1,0 +1,34 @@
+local Debounce = {}
+Debounce._keys = {}
+
+-- 
+function Debounce:Add(key: any, duration: number?): ()
+	local _duration: number = duration or 1
+	self._keys[key] = time() + _duration
+end
+
+--
+function Debounce:Remove(key: any): ()
+	self._keys[key] = nil
+end
+
+
+--
+function Debounce:Check(key: any): boolean
+	if not self._keys[key] or time() >= self._keys[key] then
+		self._keys[key] = nil
+		return true
+	else
+		return false
+	end
+end
+
+
+--
+function Debounce:WaitFor(key: any): ()
+	while not self:Check(key) do
+		task.wait()
+	end
+end
+
+return Debounce
